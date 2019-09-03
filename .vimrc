@@ -1,9 +1,9 @@
-:set cindent
-:set shiftwidth=2
-:set tabstop=2
-:set expandtab
-:set number
-:colorscheme nelson
+set cindent
+set shiftwidth=2
+set tabstop=2
+set expandtab
+set number
+colorscheme nelson
 
 filetype plugin indent on
 syntax on
@@ -15,13 +15,15 @@ noremap . mxgg=G`xzz
 
 
 function GetComment()
+  let dict = { 
+        \ 'vim': "\"",
+        \ 'cpp': "//",
+        \ 'java': "//",
+        \ 'py': "#",
+        \ 'js': "//",
+        \}
   let currentFiletype = &ft
-  let comment = ""
-  if currentFiletype == "vim" || currentFiletype == "vimrc"
-    let comment = "\""
-  elseif currentFiletype == "cpp"
-    let comment = "//"
-  endif
+  let comment = dict[currentFiletype] 
   return comment
 endfunction
 
