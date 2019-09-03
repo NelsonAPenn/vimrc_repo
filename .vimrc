@@ -21,6 +21,7 @@ function GetComment()
         \ 'java': "//",
         \ 'py': "#",
         \ 'js': "//",
+        \ 'sh': '#',
         \}
   let currentFiletype = &ft
   let comment = dict[currentFiletype] 
