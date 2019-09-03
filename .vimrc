@@ -13,24 +13,42 @@ nmap <F7> :tabp<CR>
 nmap <F8> :tabn<CR>
 noremap . mxgg=G`xzz
 
-" This function is used as a movement that can be combined with d, c, y, etc. The onoremap calls the function if & is pressed after one of those operators.
-function HighlightBlock()
-  execute "normal! zz"
-  let findBrace = "normal! /\}\<cr>"
-  let currentLine = line('.')
-  execute findBrace
-  if line('.') == currentLine
-    execute findBrace
+
+function GetComment()
+  let currentFiletype = &ft
+  let comment = ""
+  if currentFiletype == "vim" || currentFiletype == "vimrc"
+    let comment = "\""
+  elseif currentFiletype == "cpp"
+    let comment = "//"
   endif
-  execute "normal! %"
-  let openParenLine = line('.')
-  while openParenLine >= currentLine
-    execute "normal! %"
-    execute findBrace
-    execute "normal! %"
-    let openParenLine = line('.')
-  endwhile
-  execute "normal! jmqk%kV`q"
+  return comment
+endfunction
+
+" This function is used as a movement that can be combined with d, c, y, etc. The onoremap calls the function if & is pressed after one of those operators.
+" function HighlightBlock()
+"   execute "normal! zz"
+"   let findBrace = "normal! /\}\<cr>"
+"   let currentLine = line('.')
+"   execute findBrace
+"   if line('.') == currentLine
+"     execute findBrace
+"   endif
+"   execute "normal! %"
+"   let openParenLine = line('.')
+"   while openParenLine >= currentLine
+"     execute "normal! %"
+"     execute findBrace
+"     execute "normal! %"
+"     let openParenLine = line('.')
+"   endwhile
+"   execute "normal! jmqk%kV`q"
+" endfunction
+
+function HighlightBlock()
+  " Very sad because I found this command after the fact of writing my own
+  " beautiful HighlightBlock function :(
+  execute "normal! vi{"
 endfunction
 
 
@@ -39,22 +57,29 @@ function IsLineEmpty(line)
 endfunction
 
 function VToggleComment()
+  let comment = GetComment()
   execute "normal! mq`>"
   let lastLine = line('.')
   execute "normal! `<_"
-  let beginning = strpart(getline('.')[col('.') - 1:], 0, 2)
+  let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
   let commentMode = 0
-  if beginning == "//"
+  if beginning == comment
     let commentMode = 1
   endif
 
   while line('.') <= lastLine
     if !IsLineEmpty(getline('.'))
-      let beginning = strpart(getline('.')[col('.') - 1:], 0, 2)
-      if commentMode == 0 && beginning != "//"
-        execute "normal! I// " 
-      elseif commentMode == 1 && beginning == "//"
-        execute "normal! ^xx=="
+      let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+      if commentMode == 0 && beginning != comment
+        execute ("normal! I" . comment . " ") 
+      elseif commentMode == 1 && beginning == comment
+        execute "normal! ^"
+        let i = 0
+        while i < strlen(comment)
+          execute "normal! x"
+          let i = i + 1
+        endwhile
+        execute "normal! =="
       endif
     endif
     execute "normal! :" + line('.') + 1 + "<cr>"
@@ -63,13 +88,20 @@ function VToggleComment()
 endfunction
 
 function NToggleComment()
+  let comment = GetComment()
   if !IsLineEmpty(getline('.'))
     execute "normal! mq^"
-    let beginning = strpart(getline('.')[col('.') - 1:], 0, 2)
-    if beginning != "//"
-      execute "normal! I// " 
-    elseif beginning == "//"
-      execute "normal! ^xx=="
+    let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+    if beginning != comment
+      execute ("normal! I" . comment . " ") 
+    elseif beginning == comment
+      execute "normal! ^"
+      let i = 0
+      while i < strlen(comment)
+        execute "normal! x"
+        let i = i + 1
+      endwhile
+      execute "normal! =="
     endif
     execute "normal! `q"
   endif
@@ -87,6 +119,8 @@ vnoremap " <esc>`>a"<esc>`<i"<esc>
 " insert before the opening '('  (in order to type 'if(expr)', 'for(expr)', or
 " the like
 vnoremap Q <esc>`>o}<esc>`<O{<esc>mxgg=G`xI
+" press Q in normal mode to create a block below the current line
+nnoremap Q o{<cr>}<esc>O
 " + inserts w/correct spacing at current empty line
 nnoremap + ddO
 " for adding spaces in too compact code easily
