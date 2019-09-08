@@ -121,7 +121,7 @@ vnoremap " <esc>`>a"<esc>`<i"<esc>
 " press Q in visual mode to create a block around the selected lines and
 " insert before the opening '('  (in order to type 'if(expr)', 'for(expr)', or
 " the like
-vnoremap Q <esc>`>o}<esc>`<O{<esc>mxgg=G`xI
+vnoremap Q <esc>`>o}<esc>`<O{<esc>mxgg=G`x<esc>zzI
 " press Q in normal mode to create a block below the current line
 nnoremap Q o{<cr>}<esc>O
 " + inserts w/correct spacing at current empty line
