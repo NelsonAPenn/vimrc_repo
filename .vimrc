@@ -5,6 +5,7 @@ set expandtab
 set number
 colorscheme nelson
 
+
 filetype plugin indent on
 syntax on
 
@@ -151,3 +152,4 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . "> trans
 " vnoremap _ "+y
 
 
+hi Normal ctermbg=none
