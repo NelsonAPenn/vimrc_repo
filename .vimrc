@@ -23,6 +23,7 @@ function GetComment()
         \ 'py': "#",
         \ 'js': "//",
         \ 'sh': '#',
+        \ 'R': '#',
         \}
   let currentFiletype = &ft
   let comment = dict[currentFiletype] 
@@ -141,15 +142,15 @@ nnoremap <down> ddp
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . "> trans<". synIDattr(synID(line("."),col("."),0),"name") . "> lo<". synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 
-" nnoremap __ "+yy
-" nnoremap _$ "+y$
-" nnoremap _^ "+y^
-" nnoremap _0 "+y0
-" nnoremap _w "+yw
-" nnoremap _b "+yb
-" nnoremap _e "+ye
-" nnoremap _G "+yG
-" vnoremap _ "+y
+nnoremap ^^ "+yy
+nnoremap ^$ "+y$
+nnoremap ^^ "+y^
+nnoremap ^0 "+y0
+nnoremap ^w "+yw
+nnoremap ^b "+yb
+nnoremap ^e "+ye
+nnoremap ^G "+yG
+vnoremap ^ "+y
 
 
 hi Normal ctermbg=none
