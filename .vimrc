@@ -5,7 +5,6 @@ set expandtab
 set number
 colorscheme nelson
 
-
 filetype plugin indent on
 syntax on
 
@@ -111,6 +110,10 @@ function NToggleComment()
     execute "normal! `q"
   endif
 endfunction
+
+" Prevent strange behaviour of <cr>
+autocmd CmdwinEnter * nnoremap <cr> <cr>
+autocmd BufReadPost quickfix nnoremap <cr> <cr>
 
 " d&, c&, y&: delete, change, yank within block
 onoremap & :<c-u>call HighlightBlock()<cr>
