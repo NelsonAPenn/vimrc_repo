@@ -19,7 +19,7 @@ function GetComment()
         \ 'vim': "\"",
         \ 'cpp': "//",
         \ 'java': "//",
-        \ 'py': "#",
+        \ 'python': "#",
         \ 'js': "//",
         \ 'sh': '#',
         \ 'R': '#',
