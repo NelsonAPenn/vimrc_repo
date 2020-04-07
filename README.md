@@ -5,7 +5,7 @@ If you are a die-hard VIM user like me, feel free to download/clone my continuou
 Some of my favorite commands I've added:
 
  - Normal mode:
-   - `Ctrl + /` for comment/uncomment. Does not nest (as intended)!
+   - `Ctrl + /` for comment/uncomment.
    - `.` reindents everything and maintains the current cursor position
    - `&` movement function - operates on the current function block. Use in `d&`, `y&`, `c&`, etc.
    - `p` movement function - operates within the surrounding parentheses. Use in `dp`, `yp`, `cp`, etc.
@@ -19,5 +19,5 @@ Some of my favorite commands I've added:
    
  - Visual mode:
    - `Ctrl + /` for comment/uncomment
-   - `"` puts the current selection within a string
+   - `,"` puts the current selection within a string
    - `Q` puts the highlighted lines into a block and inserts before the opening parentheses
