@@ -8,7 +8,7 @@ colorscheme nelson
 filetype plugin indent on
 syntax on
 
-let mapleader = "-"
+let mapleader = ","
 nmap <F7> :tabp<CR>
 nmap <F8> :tabn<CR>
 noremap . mxgg=G`xzz
@@ -19,7 +19,7 @@ function GetComment()
         \ 'vim': "\"",
         \ 'cpp': "//",
         \ 'java': "//",
-        \ 'py': "#",
+        \ 'python': "#",
         \ 'js': "//",
         \ 'sh': '#',
         \ 'R': '#',
@@ -66,15 +66,38 @@ function VToggleComment()
   let lastLine = line('.')
   execute "normal! `<_"
   let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
-  let commentMode = 0
-  if beginning == comment
-    let commentMode = 1
-  endif
 
+  let commentMode = 1
+
+  let breakNext = 0
   while line('.') <= lastLine
     if !IsLineEmpty(getline('.'))
       let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
-      if commentMode == 0 && beginning != comment
+      if beginning != comment
+        let commentMode = 0
+        break
+      endif
+    endif
+    if breakNext
+      break
+    endif
+    execute "normal! :" + line('.') + 1 + "<cr>"
+    if line('.') == lastLine
+      let breakNext = 1
+    endif
+  endwhile
+
+  let comment = GetComment()
+  execute "normal! mq`>"
+  let lastLine = line('.')
+  execute "normal! `<_"
+  let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+
+  let breakNext = 0
+  while line('.') <= lastLine
+    if !IsLineEmpty(getline('.'))
+      let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+      if commentMode == 0
         execute ("normal! I" . comment . " ") 
       elseif commentMode == 1 && beginning == comment
         execute "normal! ^"
@@ -86,7 +109,13 @@ function VToggleComment()
         execute "normal! =="
       endif
     endif
+    if breakNext
+      break
+    endif
     execute "normal! :" + line('.') + 1 + "<cr>"
+    if line('.') == lastLine
+      let breakNext = 1
+    endif
   endwhile
   execute "normal! `q"
 endfunction
@@ -111,7 +140,7 @@ function NToggleComment()
   endif
 endfunction
 
-" Prevent strange behaviour of <cr>
+" Prevent strange behavior of <cr>
 autocmd CmdwinEnter * nnoremap <cr> <cr>
 autocmd BufReadPost quickfix nnoremap <cr> <cr>
 
@@ -122,7 +151,7 @@ onoremap p :<c-u>normal! vi(<cr>
 " ds, cs, ys, etc: delete, change, yank within string
 onoremap s :<c-u>normal! vi"<cr>
 " press " in visual mode to put quotes around selection
-vnoremap " <esc>`>a"<esc>`<i"<esc>
+vnoremap <leader>" <esc>`>a"<esc>`<i"<esc>
 " press Q in visual mode to create a block around the selected lines and
 " insert before the opening '('  (in order to type 'if(expr)', 'for(expr)', or
 " the like
