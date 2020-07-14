@@ -1,3 +1,5 @@
+set noerrorbells
+set vb t_vb=
 set cindent
 set shiftwidth=2
 set tabstop=2
