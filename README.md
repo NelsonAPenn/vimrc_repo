@@ -1,6 +1,6 @@
 # My `.vimrc`
 
-If you are a die-hard VIM user like me, feel free to download/clone my continuously expanding `.vimrc` to see what it is like to be in my shoes.
+Feel free to download/clone my continuously expanding `.vimrc`.
 
 Some of my favorite commands I've added:
 
