@@ -132,6 +132,41 @@ function ApplyComment(comment_mode)
   endif
 endfunction
 
+function Label(list)
+  " Inserts items in list at locations found by using the recording in n
+  if len(a:list) == 0
+    return
+  endif
+
+  execute "normal! i".a:list[0]
+  let i = 1
+  while i < len(a:list) 
+    execute "normal! @n"
+    execute "normal! i".a:list[i]
+
+    let i = i + 1
+  endwhile
+
+
+endfunction
+
+function Number(n)
+  " Inserts numbers at locations found by using the recording in n
+  if a:n == 0
+    return
+  endif
+
+  execute "normal! i0"
+  let i = 1
+  while i < a:n
+    execute "normal! @n"
+    execute "normal! i".i
+
+    let i = i + 1
+  endwhile
+
+endfunction
+
 function NToggleComment()
   execute "normal! mq"
 
