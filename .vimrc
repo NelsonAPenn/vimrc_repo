@@ -33,26 +33,6 @@ function GetComment()
   return comment
 endfunction
 
-" This function is used as a movement that can be combined with d, c, y, etc. The onoremap calls the function if & is pressed after one of those operators.
-" function HighlightBlock()
-"   execute "normal! zz"
-"   let findBrace = "normal! /\}\<cr>"
-"   let currentLine = line('.')
-"   execute findBrace
-"   if line('.') == currentLine
-"     execute findBrace
-"   endif
-"   execute "normal! %"
-"   let openParenLine = line('.')
-"   while openParenLine >= currentLine
-"     execute "normal! %"
-"     execute findBrace
-"     execute "normal! %"
-"     let openParenLine = line('.')
-"   endwhile
-"   execute "normal! jmqk%kV`q"
-" endfunction
-
 function HighlightBlock()
   " Very sad because I found this command after the fact of writing my own
   " beautiful HighlightBlock function :(
@@ -64,84 +44,104 @@ function IsLineEmpty(line)
   return match(a:line, "^\\s*$") != -1
 endfunction
 
-function VToggleComment()
+function CurrentCharacter()
+  return getline('.')[col('.')-1] 
+endfunction
+
+function IsSpace(c)
+  if a:c == " "
+    return 1
+  elseif a:c == "\t"
+    return 1
+  elseif a:c == "\n"
+  endif
+endfunction
+
+function CurrentLineIsCommented()
   let comment = GetComment()
+  if !IsLineEmpty(getline('.'))
+    execute "normal! ^"
+    let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+    return beginning == comment
+  endif
+  return 0
+endfunction
+
+function VToggleComment()
   execute "normal! mq`>"
-  let lastLine = line('.')
+  let last_line = line('.')
   execute "normal! `<_"
-  let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
 
-  let commentMode = 1
+  let comment_mode = 1
+  let break_next = 0
 
-  let breakNext = 0
-  while line('.') <= lastLine
-    if !IsLineEmpty(getline('.'))
-      let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
-      if beginning != comment
-        let commentMode = 0
-        break
-      endif
+  " Determine comment mode:
+  " if all lines are commented, a level of comments will be removed.
+  " Otherwise, a level of comments will be added.
+  while line('.') <= last_line
+    if !IsLineEmpty(getline('.')) && !CurrentLineIsCommented()
+      let comment_mode = 0
     endif
-    if breakNext
+
+    if break_next
       break
     endif
+
     execute "normal! :" + line('.') + 1 + "<cr>"
-    if line('.') == lastLine
-      let breakNext = 1
+    if line('.') == last_line
+      let break_next = 1
     endif
   endwhile
 
-  let comment = GetComment()
-  execute "normal! mq`>"
-  let lastLine = line('.')
-  execute "normal! `<_"
-  let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
+  execute "normal! `< "
 
-  let breakNext = 0
-  while line('.') <= lastLine
-    if !IsLineEmpty(getline('.'))
-      let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
-      if commentMode == 0
-        execute ("normal! I" . comment . " ") 
-      elseif commentMode == 1 && beginning == comment
-        execute "normal! ^"
-        let i = 0
-        while i < strlen(comment)
-          execute "normal! x"
-          let i = i + 1
-        endwhile
-        execute "normal! =="
-      endif
-    endif
-    if breakNext
+  let break_next = 0
+  while line('.') <= last_line
+    call ApplyComment(comment_mode)
+    if break_next
       break
     endif
     execute "normal! :" + line('.') + 1 + "<cr>"
-    if line('.') == lastLine
-      let breakNext = 1
+    if line('.') == last_line
+      let break_next = 1
     endif
   endwhile
   execute "normal! `q"
 endfunction
 
-function NToggleComment()
-  let comment = GetComment()
-  if !IsLineEmpty(getline('.'))
-    execute "normal! mq^"
-    let beginning = strpart(getline('.')[col('.') - 1:], 0, strlen(comment))
-    if beginning != comment
-      execute ("normal! I" . comment . " ") 
-    elseif beginning == comment
-      execute "normal! ^"
-      let i = 0
-      while i < strlen(comment)
-        execute "normal! x"
-        let i = i + 1
-      endwhile
-      execute "normal! =="
-    endif
-    execute "normal! `q"
+function ApplyComment(comment_mode)
+  if IsLineEmpty(getline('.'))
+    return
   endif
+
+  let comment = GetComment()
+  if a:comment_mode == 0
+    " insert one level of comment
+    execute ("normal! I" . comment . " ") 
+  elseif a:comment_mode == 1 && CurrentLineIsCommented()
+    " remove one level of comment
+    execute "normal! ^"
+    let i = 0
+    while i < strlen(comment)
+      execute "normal! x"
+      let i = i + 1
+    endwhile
+    while IsSpace(CurrentCharacter())
+      execute "normal! x"
+    endwhile
+  endif
+endfunction
+
+function NToggleComment()
+  execute "normal! mq"
+
+  if CurrentLineIsCommented()
+    call ApplyComment(1)
+  else
+    call ApplyComment(0)
+  endif
+
+  execute "normal! `q"
 endfunction
 
 " Prevent strange behavior of <cr>
