@@ -6,6 +6,7 @@ Some of my favorite commands I've added:
 
  - Normal mode:
    - `Ctrl + /` for comment/uncomment.
+   - `0` attempts to safely cap the current line length to 80 characters, moving the rest to the next line.
    - `.` reindents everything and maintains the current cursor position
    - `&` movement function - operates on the current function block. Use in `d&`, `y&`, `c&`, etc.
    - `p` movement function - operates within the surrounding parentheses. Use in `dp`, `yp`, `cp`, etc.
