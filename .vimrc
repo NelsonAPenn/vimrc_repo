@@ -28,6 +28,7 @@ function GetComment()
         \ 'R': '#',
         \ 'rust': '//',
         \ 'dockerfile': '#',
+        \ 'gdscript': '#'
         \}
   let currentFiletype = &ft
   let comment = dict[currentFiletype] 
