@@ -38,6 +38,8 @@ hi Ignore				ctermfg=black		guifg=bg
 hi Error	term=reverse ctermbg=Black ctermfg=Red guibg=Red guifg=White
 hi Todo	term=standout ctermbg=DarkMagenta ctermfg=Yellow guifg=Blue guibg=Yellow
 hi Namespace ctermfg=DarkYellow
+hi namespace ctermfg=DarkYellow
+hi cppSTLnamespace ctermfg=DarkYellow
 
 hi cppAccessors ctermfg=DarkGreen
 
