@@ -12,7 +12,7 @@ if exists("syntax_on")
 endif
 let g:colors_name = "nelson"
 "ctermbg on next line is entire terminal background
-hi Normal ctermfg=DarkGreen		ctermbg=Black guifg=cyan			guibg=DarkGrey
+hi Normal ctermfg=White		ctermbg=Black guifg=cyan			guibg=DarkGrey
 hi Comment	term=bold		ctermfg=Grey	guifg=#80a0ff
 hi String ctermfg=Grey
 hi Character ctermfg=Grey
@@ -21,7 +21,7 @@ hi Boolean ctermfg=Grey
 hi Constant	term=underline	ctermfg=Red		guifg=Magenta
 hi Special	term=bold	ctermfg=LightBlue	guifg=Red
 "Identifier not defined for cpp :(
-hi Identifier term=underline	cterm=bold			ctermfg=LightGreen guifg=#40ffff
+hi Identifier term=underline	cterm=bold			ctermfg=DarkCyan guifg=#40ffff
 "break et al.
 hi Statement term=bold		ctermfg=LightBlue gui=bold	guifg=#aa4444
 "case, default
