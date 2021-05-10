@@ -28,10 +28,13 @@ function GetComment()
         \ 'R': '#',
         \ 'rust': '//',
         \ 'dockerfile': '#',
-        \ 'gdscript': '#'
+        \ 'gdscript': '#',
+        \ 'tex': '%',
         \}
-  let currentFiletype = &ft
-  let comment = dict[currentFiletype] 
+  if !has_key(dict, &ft)
+    echom "Comment style not known for '".&ft."' files"
+  endif
+  let comment = get(dict, &ft, "")
   return comment
 endfunction
 
@@ -109,6 +112,11 @@ function CapLineLength()
 endfunction
 
 function VToggleComment()
+  let comment = GetComment()
+  if comment == ""
+    return
+  endif
+
   execute "normal! mq`>"
   let last_line = line('.')
   execute "normal! `<_"
@@ -156,6 +164,10 @@ function ApplyComment(comment_mode)
   endif
 
   let comment = GetComment()
+  if comment == ""
+    return
+  endif 
+
   if a:comment_mode == 0
     " insert one level of comment
     execute ("normal! I" . comment . " ") 
@@ -209,6 +221,11 @@ function Number(n)
 endfunction
 
 function NToggleComment()
+  let comment = GetComment()
+  if comment == ""
+    return
+  endif
+
   execute "normal! mq"
 
   if CurrentLineIsCommented()
