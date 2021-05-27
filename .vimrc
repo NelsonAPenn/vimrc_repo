@@ -30,6 +30,7 @@ function GetComment()
         \ 'dockerfile': '#',
         \ 'gdscript': '#',
         \ 'tex': '%',
+        \ 'gringo': '%'
         \}
   if !has_key(dict, &ft)
     echom "Comment style not known for '".&ft."' files"
