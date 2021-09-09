@@ -267,7 +267,7 @@ vnoremap Q <esc>`>o}<esc>`<O{<esc>mxgg=G`x<esc>zzI
 nnoremap Q o{<cr>}<esc>O
 
 " + inserts w/correct spacing at current empty line
-nnoremap + ddO
+nnoremap + cc
 
 " for adding spaces in too compact code easily
 nnoremap <space> i<space><esc>l
