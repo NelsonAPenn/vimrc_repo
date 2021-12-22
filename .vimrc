@@ -30,7 +30,8 @@ function GetComment()
         \ 'dockerfile': '#',
         \ 'gdscript': '#',
         \ 'tex': '%',
-        \ 'gringo': '%'
+        \ 'gringo': '%',
+        \ 'yaml': '#'
         \}
   if !has_key(dict, &ft)
     echom "Comment style not known for '".&ft."' files"
@@ -73,43 +74,39 @@ function CurrentLineIsCommented()
   return 0
 endfunction
 
-function CapLineLength()
-  execute "normal! 80|"
-
-  if virtcol('.') != 80
+function CapLineLength(cap)
+  let current_line = getline('.')
+  if strlen(current_line) <= a:cap
     " line does not need to be capped
     return
   endif
 
-  " find whether the current or surrounding characters are spaces
-  let space_at = IsSpace(CurrentCharacter())
-  execute "normal! h"
-  let space_before = IsSpace(CurrentCharacter())
-  execute "normal! l"
-  execute "normal! l"
-  if virtcol('.') == 80 " at end of line already
+  let bubble = a:cap
+  while bubble >= 0 && !IsSpace(current_line[bubble])
+    let bubble = bubble - 1
+  endwhile
+  if bubble <= 0
     return
   endif
-  let space_after = IsSpace(CurrentCharacter())
-  execute "normal! h"
 
-  " build command
-  let command = "normal! "
+  let lower = bubble
+  let upper = bubble
+  while lower >= 0 && IsSpace(current_line[lower])
+    let lower = lower - 1
+  endwhile
+  while upper < strlen(current_line) && IsSpace(current_line[upper])
+    let upper = upper + 1
+  endwhile
 
-  if !space_at && !space_after " if there is a space at or after the current character, no need to move
-
-    if !space_before " if in the middle of a word, move to the start of the word 
-      let command = command."B"
-    endif
-
-    " at this point, the cursor should be at the start of the word. Move one
-    " space left.
-    let command = command."h"
-
+  if upper - (lower + 1) > 0
+    " there is space to split on
+    let left = current_line[:lower]
+    let right = current_line[upper:]
+    call setline('.', left)
+    execute "normal! o"
+    call setline('.', right)
   endif
 
-  let command = command."a\<cr>"
-  execute command
 endfunction
 
 function VToggleComment()
@@ -279,7 +276,7 @@ nnoremap <C-_> :<c-u>call NToggleComment()<cr>
 vnoremap <C-_> <esc>:<c-u>call VToggleComment()<cr>
 
 " 0 safely caps the current line at 80 characters
-nnoremap 0 <esc>:<c-u>call CapLineLength()<cr>
+nnoremap 0 <esc>:<c-u>call CapLineLength(80)<cr>
 
 " enter in normal mode inserts a carriage return
 nnoremap <cr> i<cr><esc>
