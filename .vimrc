@@ -4,7 +4,7 @@ set cindent
 set shiftwidth=2
 set tabstop=2
 set expandtab
-set number
+" set number
 colorscheme nelson
 
 filetype plugin indent on
