@@ -101,7 +101,15 @@ function CapLineLength(cap)
   if upper - (lower + 1) > 0
     " there is space to split on
     let left = current_line[:lower]
-    let right = current_line[upper:]
+    let right_text = current_line[upper:]
+
+    let indent = ""
+    let i = 0
+    while IsSpace(left[i])
+      let indent = indent.left[i]
+      let i = i + 1
+    endwhile
+    let right = indent.right_text
     call setline('.', left)
     execute "normal! o"
     call setline('.', right)
