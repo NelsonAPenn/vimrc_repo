@@ -15,8 +15,7 @@ nmap <F7> :tabp<CR>
 nmap <F8> :tabn<CR>
 noremap . mxgg=G`xzz
 
-
-function GetComment()
+function GetCommentNoWarn()
   let dict = { 
         \ 'vim': "\"",
         \ 'cpp': "//",
@@ -33,11 +32,15 @@ function GetComment()
         \ 'gringo': '%',
         \ 'yaml': '#'
         \}
-  if !has_key(dict, &ft)
+  return get(dict, &ft, "")
+endfunction
+
+function GetComment()
+  let result = GetCommentNoWarn()
+  if result == ""
     echom "Comment style not known for '".&ft."' files"
   endif
-  let comment = get(dict, &ft, "")
-  return comment
+  return result
 endfunction
 
 function HighlightBlock()
@@ -102,6 +105,9 @@ function CapLineLength(cap)
     " there is space to split on
     let left = current_line[:lower]
     let right_text = current_line[upper:]
+    if CurrentLineIsCommented() && GetCommentNoWarn() != ""
+      let right_text = GetComment() . " " . right_text
+    endif
 
     let indent = ""
     let i = 0
