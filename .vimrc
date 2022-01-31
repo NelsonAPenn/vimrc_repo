@@ -30,7 +30,7 @@ function GetCommentNoWarn()
         \ 'gdscript': '#',
         \ 'tex': '%',
         \ 'gringo': '%',
-        \ 'yaml': '#'
+        \ 'yaml': '#',
         \ 'cs': '//'
         \}
   return get(dict, &ft, "")
