@@ -31,6 +31,7 @@ function GetCommentNoWarn()
         \ 'tex': '%',
         \ 'gringo': '%',
         \ 'yaml': '#'
+        \ 'cs': '//'
         \}
   return get(dict, &ft, "")
 endfunction
