@@ -10,10 +10,6 @@ colorscheme nelson
 filetype plugin indent on
 syntax on
 
-let mapleader = ","
-nmap <F7> :tabp<CR>
-nmap <F8> :tabn<CR>
-noremap . mxgg=G`xzz
 
 function GetCommentNoWarn()
   let dict = { 
@@ -253,6 +249,10 @@ endfunction
 
 
 " ~~~ REMAPPINGS ~~~
+
+let mapleader = ","
+nmap <F7> :tabp<CR>
+nmap <F8> :tabn<CR>
 
 " Prevent strange behavior of <cr>
 autocmd CmdwinEnter * nnoremap <cr> <cr>
