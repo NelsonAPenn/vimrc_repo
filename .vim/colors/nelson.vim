@@ -43,9 +43,6 @@ hi cppSTLnamespace ctermfg=DarkYellow
 
 hi cppAccessors ctermfg=DarkGreen
 
-syn keyword Bro Nelson Penn
-hi Bro ctermfg=Magenta ctermbg=Yellow
-
 
 " Common groups that link to default highlighting.
 " You can specify other highlighting easily.
