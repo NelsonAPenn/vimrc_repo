@@ -229,6 +229,23 @@ function Number(n)
 
 endfunction
 
+function NumberFrom(m, n)
+  " Inserts numbers at locations found by using the recording in n
+  if a:n == 0
+    return
+  endif
+
+  execute "normal! i".a:m
+  let i = a:m + 1
+  while i < a:n
+    execute "normal! @n"
+    execute "normal! i".i
+
+    let i = i + 1
+  endwhile
+
+endfunction
+
 function NToggleComment()
   let comment = GetComment()
   if comment == ""
